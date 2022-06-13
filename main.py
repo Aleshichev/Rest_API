@@ -86,22 +86,27 @@ def search_lockation():
 
 @app.route("/add", methods=["Post"])
 def post_new_cafe():
+    api_key = request.args.get("api-key")
+    if api_key == "TopSecretAPIKey":
     # добавляем новое кафе данные вводим через Postman
-    new_cafe = Cafe(
-        name=request.form.get("name"),
-        map_url=request.form.get("map_url"),
-        img_url=request.form.get("img_url"),
-        location=request.form.get("loc"),
-        has_sockets=bool(request.form.get("sockets")),
-        has_toilet=bool(request.form.get("toilet")),
-        has_wifi=bool(request.form.get("wifi")),
-        can_take_calls=bool(request.form.get("calls")),
-        seats=request.form.get("seats"),
-        coffee_price=request.form.get("coffee_price"),
-    )
-    db.session.add(new_cafe)
-    db.session.commit()
-    return jsonify(response={"success": "Successfully added the new cafe."})
+        new_cafe = Cafe(
+            name=request.form.get("name"),
+            map_url=request.form.get("map_url"),
+            img_url=request.form.get("img_url"),
+            location=request.form.get("loc"),
+            has_sockets=bool(request.form.get("sockets")),
+            has_toilet=bool(request.form.get("toilet")),
+            has_wifi=bool(request.form.get("wifi")),
+            can_take_calls=bool(request.form.get("calls")),
+            seats=request.form.get("seats"),
+            coffee_price=request.form.get("coffee_price"),
+        )
+        db.session.add(new_cafe)
+        db.session.commit()
+        return jsonify(response={"success": "Successfully added the new cafe."})
+    else:
+        return jsonify(error={"Forbidden": "Sorry, that's not allowed. Make sure you have the correct api_key."}), 403
+
 
 ## HTTP PUT/PATCH - Update Record
 @app.route("/update-price/<int:cafe_id>", methods=["PATCH"])
